@@ -1,2 +1,2 @@
 # python-template
-My own Python template to bootstrap Python packages 
+My own Python template to bootstrap Python packages

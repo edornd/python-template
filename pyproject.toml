@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "project-name"
+authors = [{ name = "Edoardo Arnaudo", email = "edoardo.arn@gmail.com" }]
+description = "Project description"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+]
+# main dependencies, use this to include everything that the project needs to run in production.
+# Depending on the use case, you can adopt a strict or loose versioning policy. (e.g. >= 1.0.0, < 2.0.0, vs. == 1.0.0)
+dependencies = [
+    "requests >= 2.25.0, < 3.0.0",
+    # using extras
+    # "uvicorn[standard] >= 0.15.0, < 0.16.0",
+    # using specific wheel urls
+    # "torch @ https://download.pytorch.org/whl/cu117/torch-2.0.1%2Bcu117-cp310-cp310-linux_x86_64.whl",
+    # "torchvision @ https://download.pytorch.org/whl/cu117/torchvision-0.15.2%2Bcu117-cp310-cp310-linux_x86_64.whl",
+]
+# dynamic metadata allow to assign the version number to the package at build time
+# the location of the version number is specified in the [tool.setuptools.dynamic] section
+dynamic = ["version"]
+
+# optional dependencies, use this to include everything that the project needs to run in development.
+# Here the loose versioning policy is usually preferred.
+[project.optional-dependencies]
+dev = [
+    "black >= 23.0.0, < 24",
+    "ruff >= 0.0.270, < 0.1.0",
+    "isort >= 5.0.0, < 6",
+]
+doc = ["mkdocs-material >= 9.2.6, < 10.0.0"]
+test = ["pytest >= 7.4.0, < 8.0.0", "pytest-cov >= 4.1.0, < 5.0.0"]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.dynamic]
+version = { attr = "project_name.__version__" }
+
+[tool.black]
+line-length = 119
+
+[tool.ruff]
+line-length = 119
+src = ["src"]
+select = ["E", "F", "UP"]
+
+[tool.isort]
+profile = "black"
+src_paths = ["src", "tests"]
