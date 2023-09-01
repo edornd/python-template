@@ -39,17 +39,20 @@ def query_params(validate: bool = True):
         return name, email, project_name, project_description, py_version
 
 
-def rename_project(project_name: str):
+def rename_project(project_name: str, root: str):
     """
     Rename the project by recursively replacing the string "project_name" with the project name.
     """
-    for path in os.listdir("."):
-        if os.path.isdir(path):
-            rename_project(path)
-        elif os.path.isfile(path):
-            with open(path) as f:
+    for rel_path in os.listdir(root):
+        if rel_path in ["__pycache__", ".git"]:
+            continue
+        abs_path = os.path.join(root, rel_path)
+        if os.path.isdir(abs_path):
+            rename_project(project_name, root=abs_path)
+        elif os.path.isfile(abs_path):
+            with open(abs_path) as f:
                 data = f.read()
-            with open(path, "w") as f:
+            with open(abs_path, "w") as f:
                 f.write(data.replace("project_name", project_name))
 
 
@@ -70,7 +73,7 @@ def update_toml_property(data: str, key: str, value: str):
     """
     Update a property in a toml string.
     """
-    return re.sub(f"{key} = .*", f'{key} = "{value}"', data)
+    return re.sub(f"{key} = .*", f"{key} = {value}", data)
 
 
 def main():
@@ -85,11 +88,11 @@ def main():
         print("Hi! Let's get started.")
         print("Please answer the following questions to help us get you set up.")
         name, email, project_name, project_description, py_version = query_params()
-        update_toml_property(data, "name", project_name)
-        update_toml_property(data, "description", project_description)
-        update_toml_property(data, "requires-python", py_version)
-        update_toml_property(data, "authors", f'[{{name = "{name}", email = "{email}"}}]')
-        update_toml_property(data, "version", f'{{attr = "{project_name}.__version__"}}')
+        data = update_toml_property(data, "name", f'"{project_name}"')
+        data = update_toml_property(data, "description", f'"{project_description}"')
+        data = update_toml_property(data, "requires-python", f'"{py_version}"')
+        data = update_toml_property(data, "authors", f'[{{name = "{name}", email = "{email}"}}]')
+        data = update_toml_property(data, "version", f'{{attr = "{project_name}.__version__"}}')
 
         print("Updating license...")
         update_license(name)
@@ -101,11 +104,12 @@ def main():
 
         # update package name and dynamic versioning
         print("Renaming project files and folders...")
-        rename_project(project_name)
+        rename_project(project_name, root="src")
+        rename_project(project_name, root="tests")
         os.rename("src/project_name", f"src/{project_name}")
 
         print("Your project is ready. Deleting myself from existence, farewell!")
-        # os.remove(__file__)
+        os.remove(__file__)
 
     except KeyboardInterrupt:
         print("Exiting.")
