@@ -110,7 +110,7 @@ def main():
         print("Renaming package files and folders...")
         rename_package(package_name, root="src")
         rename_package(package_name, root="tests")
-        os.rename("src/project_name", f"src/{project_name}")
+        os.rename("src/project_name", f"src/{package_name}")
 
         print("Your project is ready. Deleting myself from existence, farewell!")
         os.remove(__file__)
