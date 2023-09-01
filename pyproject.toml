@@ -13,7 +13,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
 ]
-# main dependencies, use this to include everything that the project needs to run in production.
+# Main dependencies, use this to include everything that the project needs to run in production.
 # Depending on the use case, you can adopt a strict or loose versioning policy.
 # e.g.:
 # using strict versioning
@@ -27,37 +27,43 @@ classifiers = [
 # "torchvision @ https://download.pytorch.org/whl/cu117/torchvision-0.15.2%2Bcu117-cp310-cp310-linux_x86_64.whl",
 dependencies = []
 
-# dynamic metadata allow to assign the version number to the package at build time
-# the location of the version number is specified in the [tool.setuptools.dynamic] section
+# Dynamic metadata allow to assign the version number to the package at build time.
+# The location of the version number is specified in the [tool.setuptools.dynamic] section.
 dynamic = ["version"]
 
-# optional dependencies, use this to include everything that the project needs to run in development.
+# Optional dependencies, use this to include everything that the project needs to run in development.
 # These can be installed by specifying for instance `pip install -e .[dev|docs|test]`
 # Here the loose versioning policy is usually preferred.
 [project.optional-dependencies]
-# add development dependencies here
+# Add development dependencies here
 dev = [
     "black >= 23.0.0, < 24",
     "ruff >= 0.0.1, < 0.1.0",
     "isort >= 5.1.0, < 6.0.0",
 ]
-# add documentation dependencies here
+# Add documentation dependencies here
 docs = [
     "mkdocs-material >= 9.2.0, < 10",
     "mdx-include >= 1.4.0, < 2",
 ]
-# add testing dependencies here
+# Add testing dependencies here
 test = [
     "coverage >= 7.3.0, < 8",
     "pytest >= 7.4.0, < 8",
     "pytest-cov >= 4.1.0, < 5",
 ]
 
+# Uncomment this section if you intend to use the package as a CLI.
+# Using the __main__.py file, the package is already executable with `python -m package_name`.
+# However, the following section allows a nicer invocation using the `package_name` command directly.
+# [project.scripts]
+# package_name = "package_name.cli:main"
+
 [tool.setuptools]
 package-dir = { "" = "src" }
 
 [tool.setuptools.dynamic]
-version = { attr = "project_name.__version__" }
+version = { attr = "package_name.__version__" }
 
 [tool.black]
 line-length = 119
