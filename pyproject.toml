@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "project-name"
-authors = [{ name = "Edoardo Arnaudo", email = "edoardo.arn@gmail.com" }]
+authors = [{ name = "Name Surname", email = "name.surname@mail.com" }]
 description = "Project description"
 readme = "README.md"
 license = { file = "LICENSE" }
