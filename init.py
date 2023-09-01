@@ -16,7 +16,10 @@ def query_params(validate: bool = True):
         while not (email := input("What is your email address? ")):
             print("Please enter your email address, or press Ctrl+C to exit.")
 
-        while not (project_name := input("What should we call your project? ")):
+        while not (project_name := input("What should we call the project? (e.g., scikit-learn) ")):
+            print("Please enter a project name, or press Ctrl+C to exit.")
+
+        while not (package_name := input("What should we call the package? (e.g., sklearn) ")):
             print("Please enter a project name, or press Ctrl+C to exit.")
 
         while not (project_description := input("What is your project about? ")):
@@ -31,15 +34,16 @@ def query_params(validate: bool = True):
             print("So far, we have:")
             print(f" - Author: {name} <{email}>")
             print(f" - Project name: {project_name}")
+            print(f" - Package name: {package_name}")
             print(f" - Project description: {project_description}")
             print(f" - Python version: {py_version}")
             if input("Is this correct? (y/n) ").lower() != "y":
-                print("Understood, let's try again.")
+                print("Alright, let's try again.")
                 continue
-        return name, email, project_name, project_description, py_version
+        return name, email, project_name, package_name, project_description, py_version
 
 
-def rename_project(project_name: str, root: str):
+def rename_package(project_name: str, root: str):
     """
     Rename the project by recursively replacing the string "project_name" with the project name.
     """
@@ -48,7 +52,7 @@ def rename_project(project_name: str, root: str):
             continue
         abs_path = os.path.join(root, rel_path)
         if os.path.isdir(abs_path):
-            rename_project(project_name, root=abs_path)
+            rename_package(project_name, root=abs_path)
         elif os.path.isfile(abs_path):
             with open(abs_path) as f:
                 data = f.read()
@@ -87,12 +91,12 @@ def main():
     try:
         print("Hi! Let's get started.")
         print("Please answer the following questions to help us get you set up.")
-        name, email, project_name, project_description, py_version = query_params()
+        name, email, project_name, package_name, project_description, py_version = query_params()
         data = update_toml_property(data, "name", f'"{project_name}"')
         data = update_toml_property(data, "description", f'"{project_description}"')
         data = update_toml_property(data, "requires-python", f'"{py_version}"')
         data = update_toml_property(data, "authors", f'[{{name = "{name}", email = "{email}"}}]')
-        data = update_toml_property(data, "version", f'{{attr = "{project_name}.__version__"}}')
+        data = update_toml_property(data, "version", f'{{attr = "{package_name}.__version__"}}')
 
         print("Updating license...")
         update_license(name)
@@ -103,9 +107,9 @@ def main():
             f.write(data)
 
         # update package name and dynamic versioning
-        print("Renaming project files and folders...")
-        rename_project(project_name, root="src")
-        rename_project(project_name, root="tests")
+        print("Renaming package files and folders...")
+        rename_package(package_name, root="src")
+        rename_package(package_name, root="tests")
         os.rename("src/project_name", f"src/{project_name}")
 
         print("Your project is ready. Deleting myself from existence, farewell!")
