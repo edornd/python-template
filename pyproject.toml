@@ -38,8 +38,9 @@ dynamic = ["version"]
 # Add development dependencies here
 dev = [
     "black >= 23.0.0, < 24",
-    "ruff >= 0.0.1, < 0.1.0",
     "isort >= 5.1.0, < 6.0.0",
+    "gitchangelog >= 3.0.4, < 4.0.0",
+    "ruff >= 0.0.1, < 0.1.0",
 ]
 # Add documentation dependencies here
 docs = [
